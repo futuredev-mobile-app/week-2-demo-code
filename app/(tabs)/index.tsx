@@ -7,9 +7,12 @@ import {
   FlatList,
 } from "react-native";
 import { useState, useEffect } from "react";
+import { TouchableOpacity } from "react-native";
+import { useRouter } from "expo-router";
 
 export default function HomeScreen() {
   const [products, setProducts] = useState<any[]>([]);
+  const router = useRouter();
 
   const STOREFRONT_TOKEN = "ptkn_25057bc8-f67f-41c7-95a8-39d6f16d54d1";
 
@@ -34,7 +37,7 @@ export default function HomeScreen() {
   useEffect(() => {
     fetchProducts();
     console.log("products", products);
-  }, [products]);
+  }, []);
 
   if (products.length === 0) {
     return (
@@ -54,13 +57,19 @@ export default function HomeScreen() {
         <FlatList
           data={products}
           renderItem={({ item }) => (
-            <View style={styles.item}>
-              <Text style={styles.title}>{item.name}</Text>
-              <Image
-                style={{ width: 50, height: 50 }}
-                source={{ uri: item.images[0].url }}
-              />
-            </View>
+            <TouchableOpacity
+              onPress={() => {
+                router.push(`/(tabs)/product/${item.slug}`);
+              }}
+            >
+              <View style={styles.item}>
+                <Text style={styles.title}>{item.name}</Text>
+                <Image
+                  style={{ width: 50, height: 50 }}
+                  source={{ uri: item.images[0].url }}
+                />
+              </View>
+            </TouchableOpacity>
           )}
         />
       )}
